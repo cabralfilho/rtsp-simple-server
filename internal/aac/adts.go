@@ -32,7 +32,7 @@ func DecodeADTS(byts []byte) ([]*ADTSPacket, error) {
 
 		profile := (byts[2] >> 6)
 		if profile != 0 {
-			return nil, fmt.Errorf("only AAC-LC is supported")
+			return nil, fmt.Errorf("only AAC-LC is supported (profile=%d)", profile)
 		}
 
 		sampleRateIndex := (byts[2] >> 2) & 0x0F

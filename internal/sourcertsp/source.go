@@ -158,6 +158,7 @@ func (s *Source) runInner() bool {
 				s.log(logger.Debug, "s->c %v", res)
 			},
 		}
+
 		conn, err = conf.DialRead(s.ur)
 	}()
 

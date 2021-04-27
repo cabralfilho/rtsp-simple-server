@@ -139,7 +139,7 @@ func (pconf *PathConf) fillAndCheck(name string) error {
 
 		u, err := base.ParseURL(pconf.Source)
 		if err != nil {
-			return fmt.Errorf("'%s' is not a valid RTSP url", pconf.Source)
+			return fmt.Errorf("'%s' is not a valid RTSP URL", pconf.Source)
 		}
 
 		if u.User != nil {
@@ -181,10 +181,33 @@ func (pconf *PathConf) fillAndCheck(name string) error {
 
 		u, err := url.Parse(pconf.Source)
 		if err != nil {
-			return fmt.Errorf("'%s' is not a valid RTMP url", pconf.Source)
+			return fmt.Errorf("'%s' is not a valid RTMP URL", pconf.Source)
 		}
 		if u.Scheme != "rtmp" {
-			return fmt.Errorf("'%s' is not a valid RTMP url", pconf.Source)
+			return fmt.Errorf("'%s' is not a valid RTMP URL", pconf.Source)
+		}
+
+		if u.User != nil {
+			pass, _ := u.User.Password()
+			user := u.User.Username()
+			if user != "" && pass == "" ||
+				user == "" && pass != "" {
+				return fmt.Errorf("username and password must be both provided")
+			}
+		}
+
+	case strings.HasPrefix(pconf.Source, "http://") ||
+		strings.HasPrefix(pconf.Source, "https://"):
+		if pconf.Regexp != nil {
+			return fmt.Errorf("a path with a regular expression (or path 'all') cannot have a HLS source; use another path")
+		}
+
+		u, err := url.Parse(pconf.Source)
+		if err != nil {
+			return fmt.Errorf("'%s' is not a valid HLS URL", pconf.Source)
+		}
+		if u.Scheme != "http" && u.Scheme != "https" {
+			return fmt.Errorf("'%s' is not a valid HLS URL", pconf.Source)
 		}
 
 		if u.User != nil {
@@ -203,7 +226,7 @@ func (pconf *PathConf) fillAndCheck(name string) error {
 
 		_, err := base.ParseURL(pconf.SourceRedirect)
 		if err != nil {
-			return fmt.Errorf("'%s' is not a valid RTSP url", pconf.SourceRedirect)
+			return fmt.Errorf("'%s' is not a valid RTSP URL", pconf.SourceRedirect)
 		}
 
 	default:
@@ -234,7 +257,7 @@ func (pconf *PathConf) fillAndCheck(name string) error {
 		} else {
 			_, err := base.ParseURL(pconf.Fallback)
 			if err != nil {
-				return fmt.Errorf("'%s' is not a valid RTSP url", pconf.Fallback)
+				return fmt.Errorf("'%s' is not a valid RTSP URL", pconf.Fallback)
 			}
 		}
 	}

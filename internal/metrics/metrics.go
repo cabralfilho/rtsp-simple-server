@@ -84,6 +84,8 @@ func (m *Metrics) onMetrics(w http.ResponseWriter, req *http.Request) {
 	countSourcesRTSPRunning := atomic.LoadInt64(m.stats.CountSourcesRTSPRunning)
 	countSourcesRTMP := atomic.LoadInt64(m.stats.CountSourcesRTMP)
 	countSourcesRTMPRunning := atomic.LoadInt64(m.stats.CountSourcesRTMPRunning)
+	countSourcesHLS := atomic.LoadInt64(m.stats.CountSourcesHLS)
+	countSourcesHLSRunning := atomic.LoadInt64(m.stats.CountSourcesHLSRunning)
 
 	out := ""
 	out += formatMetric("rtsp_clients{state=\"idle\"}",
@@ -100,6 +102,10 @@ func (m *Metrics) onMetrics(w http.ResponseWriter, req *http.Request) {
 		countSourcesRTMP-countSourcesRTMPRunning, nowUnix)
 	out += formatMetric("rtsp_sources{type=\"rtmp\",state=\"running\"}",
 		countSourcesRTMPRunning, nowUnix)
+	out += formatMetric("rtsp_sources{type=\"hls\",state=\"idle\"}",
+		countSourcesHLS-countSourcesHLSRunning, nowUnix)
+	out += formatMetric("rtsp_sources{type=\"hls\",state=\"running\"}",
+		countSourcesHLSRunning, nowUnix)
 
 	w.WriteHeader(http.StatusOK)
 	io.WriteString(w, out)

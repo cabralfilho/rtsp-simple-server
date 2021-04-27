@@ -16,6 +16,8 @@ type Stats struct {
 	CountSourcesRTSPRunning *int64
 	CountSourcesRTMP        *int64
 	CountSourcesRTMPRunning *int64
+	CountSourcesHLS         *int64
+	CountSourcesHLSRunning  *int64
 }
 
 // New allocates a Stats.
@@ -28,6 +30,8 @@ func New() *Stats {
 		CountSourcesRTSPRunning: ptrInt64(),
 		CountSourcesRTMP:        ptrInt64(),
 		CountSourcesRTMPRunning: ptrInt64(),
+		CountSourcesHLS:         ptrInt64(),
+		CountSourcesHLSRunning:  ptrInt64(),
 	}
 }
 
